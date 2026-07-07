@@ -4,6 +4,7 @@
 /node_modules
 /.strapi
 /dist
+.tmp
 
 /.pnp
 .pnp.*
