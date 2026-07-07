@@ -2,6 +2,12 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 
+import { FlatCompat } from "@eslint/eslintrc";
+
+const compat = new FlatCompat({
+  baseDirectory: import.meta.dirname,
+});
+
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
@@ -13,6 +19,9 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  ...compat.config({
+    extends: ["next/core-web-vitals", "prettier"], // "prettier" must be last
+  }),
 ]);
 
 export default eslintConfig;

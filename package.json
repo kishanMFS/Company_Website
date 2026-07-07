@@ -6,12 +6,19 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "prepare": "husky"
   },
   "dependencies": {
     "next": "16.2.10",
     "react": "19.2.4",
     "react-dom": "19.2.4"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "next lint --fix",
+     "**/*.{js,jsx,ts,tsx,html,css,json,md}": [
+      "prettier --write"
+    ]
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.2",
@@ -20,10 +27,14 @@
     "@types/react-dom": "^19",
     "autoprefixer": "^10.5.2",
     "babel-plugin-react-compiler": "1.0.0",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.10",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.10",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
     "postcss": "^8.5.16",
+    "prettier": "^3.9.4",
+    "prettifier": "^0.4.0",
     "tailwindcss": "^4.3.2",
-    "typescript": "^5"
+    "typescript": "^5.9.3"
   }
 }
