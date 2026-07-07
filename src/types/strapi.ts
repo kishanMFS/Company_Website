@@ -77,6 +77,7 @@ export interface CompanySettings {
   id: number;
   documentId: string;
   companyName: string;
+  subtitle: string;
   footer: StrapiRichTextNode[];
   companyLogo: StrapiImage;
   createdAt: string;

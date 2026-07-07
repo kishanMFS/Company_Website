@@ -34,9 +34,6 @@ export default function HomePage() {
           <div className="h-20 animate-pulse rounded-xl bg-white/10" />
         ) : settingsError ? (
           <div className="space-y-2">
-            <p className="text-sm uppercase tracking-[0.3em] text-slate-300">
-              Company Banner
-            </p>
             <h1 className="text-3xl font-semibold sm:text-4xl">
               We build modern digital experiences.
             </h1>
@@ -46,15 +43,12 @@ export default function HomePage() {
           </div>
         ) : (
           <div className="space-y-4">
-            <p className="text-sm uppercase tracking-[0.3em] text-slate-300">
-              Company Banner
-            </p>
             <h1 className="text-3xl font-semibold sm:text-4xl">
-              {settings?.companyName ?? 'We build modern digital experiences.'}
+              {settings?.companyName ?? 'company name'}
             </h1>
             <p className="max-w-2xl text-base text-slate-300 sm:text-lg">
-              {settings?.companyName ??
-                'A polished company website powered by Strapi and Next.js.'}
+              {settings?.subtitle ??
+                'A company website powered by Strapi and Next.js.'}
             </p>
           </div>
         )}
