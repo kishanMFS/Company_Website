@@ -1,5 +1,6 @@
 'use client';
 import { BlocksRenderer } from '@strapi/blocks-react-renderer';
+// import Image from 'next/image';
 
 import { useApi } from '../hooks/useApi';
 import { BlogPost, CompanySettings, Service } from '../types/strapi';
@@ -43,6 +44,16 @@ export default function HomePage() {
           </div>
         ) : (
           <div className="space-y-4">
+            {/* {settings?.companyLogo?.url && (
+              <Image
+                src={`${process.env.NEXT_PUBLIC_BACKEND}${settings.companyLogo.url}`}
+                alt={settings.companyLogo.alternativeText ?? 'Company Logo'}
+                width={Math.round((settings.companyLogo.width ?? 180) / 90)}
+                height={Math.round((settings.companyLogo.height ?? 180) / 90)}
+                priority
+                // unoptimized
+              />
+            )} */}
             <h1 className="text-3xl font-semibold sm:text-4xl">
               {settings?.companyName ?? 'company name'}
             </h1>
