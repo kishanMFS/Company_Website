@@ -4,13 +4,37 @@ import { BlocksRenderer } from '@strapi/blocks-react-renderer';
 
 import { useApi } from '../hooks/useApi';
 import { BlogPost, CompanySettings, Service } from '../types/strapi';
+import QueryString from 'qs';
+import qs from 'qs';
 
 export default function HomePage() {
+  const homePageQuery = qs.stringify({
+    populate: {
+      blocks: {
+        on: {
+          'layout.hero-section': {
+            populate: {
+              fields: ['title', 'subtitle'],
+              services: {
+                fields: ['title', 'description'],
+                populate: {
+                  services: {
+                    fields: ['title', 'description', 'price'],
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
   const {
     data: settingsResponse,
     isLoading: loadingSettings,
     error: settingsError,
-  } = useApi<CompanySettings>('/api/site-settings?populate=*');
+  } = useApi<CompanySettings>('/api/home-page', homePageQuery);
 
   const {
     data: servicesResponse,
