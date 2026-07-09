@@ -1,28 +1,35 @@
-import { useState, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query';
+import { fetchFromStrapi } from '../lib/api';
+import { StrapiResponse } from '../types/strapi';
 
-// type ApiState<T> = {
-//   data: T | null
-//   loading: boolean
-//   error: Error | null
-// }
+export function useApiClient<T = unknown>(path: string, queryString: string, enabled = true) {
+  return useQuery<StrapiResponse<T>, Error>({
+    queryKey: ['strapi', path],
+    queryFn: () => fetchFromStrapi<T>(path, queryString),
+    enabled,
+    retry: false,
+  });
+}
 
-export function useApi<T = unknown>(url: string) {
-  const [data, setData] = useState<T | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<Error | null>(null)
-
-  useEffect(() => {
-    fetch(url)
-      .then(res => res.json())
-      .then((data: T) => {
-        setData(data)
-        setLoading(false)
-      })
-      .catch((err: Error) => {
-        setError(err)
-        setLoading(false)
-      })
-  }, [url])
-
-  return { data, loading, error }
+export async function useApiServer<T = unknown> (
+  path: string,
+  queryString: string
+): Promise<{
+  data: StrapiResponse<T> | null;
+  error: Error | null;
+}> {
+  try {
+    const data = await fetchFromStrapi<T>(path, queryString);
+// console.dir(data)
+    return {
+      data,
+      error: null,
+    };
+  } catch (err) {
+    // console.dir(err.message)
+    return {
+      data: null,
+      error: err as Error,
+    };
+  }
 }

@@ -10,13 +10,16 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@strapi/blocks-react-renderer": "^1.0.2",
+    "@tanstack/react-query": "^5.101.2",
     "next": "16.2.10",
+    "qs": "^6.15.3",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "next lint --fix",
-     "**/*.{js,jsx,ts,tsx,html,css,json,md}": [
+    "**/*.{js,jsx,ts,tsx,html,css,json,md}": [
       "prettier --write"
     ]
   },
@@ -35,6 +38,7 @@
     "prettier": "^3.9.4",
     "prettifier": "^0.4.0",
     "tailwindcss": "^4.3.2",
+    "@types/qs": "^6.15.1",
     "typescript": "^5.9.3"
   }
 }
