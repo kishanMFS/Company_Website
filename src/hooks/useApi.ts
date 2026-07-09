@@ -11,6 +11,25 @@ export function useApiClient<T = unknown>(path: string, queryString: string, ena
   });
 }
 
-export function useApiServer<T = unknown> (path: string, queryString: string) {
-  return fetchFromStrapi<T>(path, queryString);
+export async function useApiServer<T = unknown> (
+  path: string,
+  queryString: string
+): Promise<{
+  data: StrapiResponse<T> | null;
+  error: Error | null;
+}> {
+  try {
+    const data = await fetchFromStrapi<T>(path, queryString);
+
+    return {
+      data,
+      error: null,
+    };
+  } catch (err) {
+    console.dir(err.message)
+    return {
+      data: null,
+      error: err as Error,
+    };
+  }
 }

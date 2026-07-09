@@ -106,6 +106,5 @@ export type BlogPost = {
 };
 
 export interface Global {
-  header: {};
 
 }

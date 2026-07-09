@@ -12,7 +12,16 @@ export async function fetchFromStrapi<T>(path: string, queryString: string): Pro
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch ${path}`);
+    let message = `Failed to fetch ${path}`;
+
+    try {
+      const err = await response.json();
+      message = err?.error?.message || err?.message || message;
+    } catch {
+      // ignore
+    }
+
+    throw new Error(message);
   }
 
   return response.json() as Promise<StrapiResponse<T>>;
