@@ -20,13 +20,13 @@ export async function useApiServer<T = unknown> (
 }> {
   try {
     const data = await fetchFromStrapi<T>(path, queryString);
-
+// console.dir(data)
     return {
       data,
       error: null,
     };
   } catch (err) {
-    console.dir(err.message)
+    // console.dir(err.message)
     return {
       data: null,
       error: err as Error,

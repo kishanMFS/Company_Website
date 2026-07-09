@@ -1,13 +1,13 @@
-'use client';
+// 'use client';
 import { BlocksRenderer } from '@strapi/blocks-react-renderer';
 // import Image from 'next/image';
 
 import { useApiServer } from '../hooks/useApi';
-import { BlogPost, CompanySettings, Service } from '../types/strapi';
-import QueryString from 'qs';
+import { CompanyHomepage } from '../types/strapi';
 import qs from 'qs';
+import { Key } from 'react';
 
-export default function HomePage() {
+export default async function HomePage() {
   const homePageQuery = qs.stringify({
     populate: {
       blocks: {
@@ -23,6 +23,14 @@ export default function HomePage() {
                   },
                 },
               },
+              blogpost: {
+                fields: ['title', 'description'],
+                populate: {
+                  blog_posts: {
+                    fields: ['title', 'description'],
+                  },
+                },
+              },
             },
           },
         },
@@ -31,33 +39,17 @@ export default function HomePage() {
   });
 
   const {
-    data: settingsResponse,
-    isLoading: loadingSettings,
-    error: settingsError,
-  } = useApiServer<CompanySettings>('/api/home-page', homePageQuery);
+    data: homepageResponse,
+    // isLoading: loadingHomepage,
+    error: homepageError,
+  } = await useApiServer<CompanyHomepage>('/api/home-page', homePageQuery);
 
-  const {
-    data: servicesResponse,
-    isLoading: loadingServices,
-    error: servicesError,
-  } = useApiServer<Service>('/api/services?populate=*');
-
-  const {
-    data: postsResponse,
-    isLoading: loadingPosts,
-    error: postsError,
-  } = useApiServer<BlogPost>('/api/blog-posts?populate=*');
-
-  const settings = settingsResponse?.data?.[0];
-  const services = servicesResponse?.data?.slice(0, 3) ?? [];
-  const posts = postsResponse?.data?.slice(0, 3) ?? [];
+  const homepage = homepageResponse?.data.blocks[0];
 
   return (
     <main className="mx-auto flex max-w-7xl flex-col gap-10 py-6 sm:py-8 lg:py-10">
       <section className="overflow-hidden rounded-3xl bg-linear-to-br from-slate-900 via-slate-800 to-slate-700 p-8 text-white shadow-xl sm:p-10 lg:p-14">
-        {loadingSettings ? (
-          <div className="h-20 animate-pulse rounded-xl bg-white/10" />
-        ) : settingsError ? (
+        {homepageError ? (
           <div className="space-y-2">
             <h1 className="text-3xl font-semibold sm:text-4xl">
               We build modern digital experiences.
@@ -79,10 +71,10 @@ export default function HomePage() {
               />
             )} */}
             <h1 className="text-3xl font-semibold sm:text-4xl">
-              {settings?.companyName ?? 'company name'}
+              {homepage.title ?? 'company name'}
             </h1>
             <p className="max-w-2xl text-base text-slate-300 sm:text-lg">
-              {settings?.subtitle ??
+              {homepage.subtitle ??
                 'A company website powered by Strapi and Next.js.'}
             </p>
           </div>
@@ -93,44 +85,37 @@ export default function HomePage() {
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-500">
-              Services
+              {homepage.services[0].title}
             </p>
             <h2 className="text-2xl font-semibold text-slate-900">
-              Highlighted Services
+              {homepage.services[0].description}
             </h2>
           </div>
         </div>
 
-        {loadingServices ? (
-          <div className="grid gap-4 md:grid-cols-3">
-            {[1, 2, 3].map((s) => (
-              <div
-                key={s}
-                className="h-36 animate-pulse rounded-2xl bg-slate-200"
-              />
-            ))}
-          </div>
-        ) : servicesError ? (
+        {homepageError ? (
           <p className="text-sm text-slate-600">
             Services are temporarily unavailable.
           </p>
         ) : (
           <div className="grid gap-6 md:grid-cols-3">
-            {services.map((service) => (
-              <article
-                key={service.id}
-                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-              >
-                <h3 className="text-lg font-semibold text-slate-900">
-                  {service.title ?? 'Service'}
-                </h3>
-                <div className="mt-3 text-sm leading-6 text-slate-600">
-                  <BlocksRenderer
-                    content={service.description ?? 'description area'}
-                  />
-                </div>
-              </article>
-            ))}
+            {homepage.services[0].services.map(
+              (service: { id: Key; title: string; description: string }) => (
+                <article
+                  key={service.id}
+                  className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+                >
+                  <h3 className="text-lg font-semibold text-slate-900">
+                    {service.title ?? 'Service'}
+                  </h3>
+                  <div className="mt-3 text-sm leading-6 text-slate-600">
+                    <BlocksRenderer
+                      content={service.description ?? 'description area'}
+                    />
+                  </div>
+                </article>
+              )
+            )}
           </div>
         )}
       </section>
@@ -138,29 +123,20 @@ export default function HomePage() {
       <section className="space-y-5">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-slate-500">
-            Blog
+            {homepage.blogpost[0].title}
           </p>
           <h2 className="text-2xl font-semibold text-slate-900">
-            Featured Blog Posts
+            {homepage.blogpost[0].description}
           </h2>
         </div>
 
-        {loadingPosts ? (
-          <div className="grid gap-4 lg:grid-cols-3">
-            {[1, 2, 3].map((p) => (
-              <div
-                key={p}
-                className="h-32 animate-pulse rounded-2xl bg-slate-200"
-              />
-            ))}
-          </div>
-        ) : postsError ? (
+        {homepageError ? (
           <p className="text-sm text-slate-600">
             Blog posts are temporarily unavailable.
           </p>
         ) : (
           <div className="grid gap-6 lg:grid-cols-3">
-            {posts.map((post) => (
+            {homepage.blogpost[0].blog_posts.map((post) => (
               <article
                 key={post.id}
                 className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
@@ -172,7 +148,7 @@ export default function HomePage() {
                   {post.title ?? 'Untitled Post'}
                 </h3>
                 <div className="mt-3 text-sm leading-6 text-slate-600">
-                  <BlocksRenderer content={post.content} />
+                  <BlocksRenderer content={post.description} />
                 </div>
               </article>
             ))}

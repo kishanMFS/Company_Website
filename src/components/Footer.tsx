@@ -32,7 +32,6 @@ async function Footer() {
   } = await useApiServer<Global>('/api/global', layoutQuery);
 
   const footer = globalResponse?.data?.footer;
-  console.dir(globalResponse);
 
   return (
     <footer className="border-t border-slate-200 bg-white text-slate-700">

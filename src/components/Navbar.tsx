@@ -58,12 +58,12 @@ async function Navbar() {
               )}
             </nav>
             <div className="flex items-center gap-3">
-              <Link
+              {/* <Link
                 href="/contact"
                 className="inline-flex items-center rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-700"
               >
                 Get in touch
-              </Link>
+              </Link> */}
             </div>
           </>
         )}

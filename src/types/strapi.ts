@@ -73,7 +73,7 @@ export interface StrapiResponse<T> {
 }
 
 // Company Settings Type (for your API data)
-export interface CompanySettings {
+export interface CompanyHomepage {
   id: number;
   documentId: string;
   companyName: string;
@@ -83,6 +83,7 @@ export interface CompanySettings {
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
+  blocks: [];
 }
 
 
