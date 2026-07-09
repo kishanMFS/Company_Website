@@ -104,3 +104,8 @@ export type BlogPost = {
   content?: string;
   slug?: string;
 };
+
+export interface Global {
+  header: {};
+
+}

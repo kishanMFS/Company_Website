@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useApi } from '@/hooks/useApi';
+import { useApiServer } from '@/hooks/useApi';
 
 import { BlocksRenderer } from '@strapi/blocks-react-renderer';
 import type { BlocksContent } from '@strapi/blocks-react-renderer';
@@ -27,13 +27,13 @@ export default function AboutPage() {
     data: aboutResponse,
     isLoading: loadingAbout,
     error: aboutError,
-  } = useApi<About>('/api/about?populate=*');
+  } = useApiServer<About>('/api/about?populate=*');
 
   const {
     data: teamResponse,
     isLoading: loadingTeam,
     error: teamError,
-  } = useApi<TeamMember>('/api/team-members?populate=*');
+  } = useApiServer<TeamMember>('/api/team-members?populate=*');
 
   if (loadingAbout || loadingTeam) {
     return (

@@ -2,7 +2,7 @@
 import { BlocksRenderer } from '@strapi/blocks-react-renderer';
 // import Image from 'next/image';
 
-import { useApi } from '../hooks/useApi';
+import { useApiServer } from '../hooks/useApi';
 import { BlogPost, CompanySettings, Service } from '../types/strapi';
 import QueryString from 'qs';
 import qs from 'qs';
@@ -34,19 +34,19 @@ export default function HomePage() {
     data: settingsResponse,
     isLoading: loadingSettings,
     error: settingsError,
-  } = useApi<CompanySettings>('/api/home-page', homePageQuery);
+  } = useApiServer<CompanySettings>('/api/home-page', homePageQuery);
 
   const {
     data: servicesResponse,
     isLoading: loadingServices,
     error: servicesError,
-  } = useApi<Service>('/api/services?populate=*');
+  } = useApiServer<Service>('/api/services?populate=*');
 
   const {
     data: postsResponse,
     isLoading: loadingPosts,
     error: postsError,
-  } = useApi<BlogPost>('/api/blog-posts?populate=*');
+  } = useApiServer<BlogPost>('/api/blog-posts?populate=*');
 
   const settings = settingsResponse?.data?.[0];
   const services = servicesResponse?.data?.slice(0, 3) ?? [];
