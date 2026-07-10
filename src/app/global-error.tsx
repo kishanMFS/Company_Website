@@ -1,4 +1,3 @@
-// app/global-error.tsx
 'use client';
 
 export default function GlobalError({
@@ -12,6 +11,7 @@ export default function GlobalError({
     <html>
       <body>
         <h1>A critical system error occurred.</h1>
+        <p>message : {error.message}</p>
         <button onClick={() => reset()}>Retry Application</button>
       </body>
     </html>

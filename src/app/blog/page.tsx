@@ -4,7 +4,6 @@ import { useApiClient } from '@/hooks/useApi';
 import BlogCard from '../../components/blog/BlogCard';
 import BlogHero from '../../components/blog/BlogHero';
 import qs from 'qs';
-// import { blogs } from '@/app/data/blogs';
 
 export interface Blog {
   slug: string;
@@ -44,7 +43,7 @@ export default function BlogPage() {
 
   return (
     <main className="bg-gray-50">
-      <BlogHero />
+      {loadingBlog ? <></> : <BlogHero blogs={blogs} />}
       <section className="mx-auto max-w-7xl px-6 py-20">
         <div className="mb-12 flex items-center justify-between">
           <h2 className="text-3xl font-bold"> Latest Articles </h2>

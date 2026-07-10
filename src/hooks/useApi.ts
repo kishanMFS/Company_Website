@@ -20,7 +20,7 @@ export async function useApiServer<T = unknown> (
 }> {
   try {
     const data = await fetchFromStrapi<T>(path, queryString);
-// console.dir(data)
+    // console.dir(data)
     return {
       data,
       error: null,
