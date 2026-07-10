@@ -1,6 +1,6 @@
-// 'use client';
-import { BlocksRenderer } from '@strapi/blocks-react-renderer';
+import { BlocksContent, BlocksRenderer } from '@strapi/blocks-react-renderer';
 // import Image from 'next/image';
+import { truncateBlocks } from '../lib/utils';
 
 import { useApiServer } from '../hooks/useApi';
 import { CompanyHomepage } from '../types/strapi';
@@ -136,22 +136,30 @@ export default async function HomePage() {
           </p>
         ) : (
           <div className="grid gap-6 lg:grid-cols-3">
-            {homepage.blogpost[0].blog_posts.map((post) => (
-              <article
-                key={post.id}
-                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-              >
-                <p className="text-sm font-medium uppercase tracking-[0.25em] text-slate-500">
-                  Article
-                </p>
-                <h3 className="mt-3 text-lg font-semibold text-slate-900">
-                  {post.title ?? 'Untitled Post'}
-                </h3>
-                <div className="mt-3 text-sm leading-6 text-slate-600">
-                  <BlocksRenderer content={post.description} />
-                </div>
-              </article>
-            ))}
+            {homepage.blogpost[0].blog_posts.map(
+              (post: {
+                id: Key;
+                title: string;
+                description: BlocksContent;
+              }) => (
+                <article
+                  key={post.id}
+                  className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+                >
+                  <p className="text-sm font-medium uppercase tracking-[0.25em] text-slate-500">
+                    Article
+                  </p>
+                  <h3 className="mt-3 text-lg font-semibold text-slate-900">
+                    {post.title ?? 'Untitled Post'}
+                  </h3>
+                  <div className="mt-3 text-sm leading-6 text-slate-600">
+                    <BlocksRenderer
+                      content={truncateBlocks(post.description, 150)}
+                    />
+                  </div>
+                </article>
+              )
+            )}
           </div>
         )}
       </section>

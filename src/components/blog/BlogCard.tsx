@@ -4,6 +4,7 @@ import {
 } from '@strapi/blocks-react-renderer';
 import Link from 'next/link';
 import Image from 'next/image';
+import { truncateBlocks } from '../../lib/utils';
 
 interface StrapiImage {
   url: string;
@@ -19,66 +20,6 @@ export interface Blog {
   category: string;
   image?: StrapiImage | null;
   content: string;
-}
-
-function truncateBlocks(
-  content: BlocksContent,
-  maxLength = 150
-): BlocksContent {
-  let length = 0;
-  const result: BlocksContent = [];
-
-  for (const block of content) {
-    // Ignore empty paragraphs
-    if (
-      block.type === 'paragraph' &&
-      block.children.every(
-        (child) => child.type === 'text' && child.text.trim() === ''
-      )
-    ) {
-      continue;
-    }
-
-    const newBlock = {
-      ...block,
-      children: [],
-    } as typeof block;
-
-    for (const child of block.children) {
-      if (child.type !== 'text') {
-        newBlock.children.push(child);
-        continue;
-      }
-
-      if (length >= maxLength) break;
-
-      const remaining = maxLength - length;
-
-      if (child.text.length <= remaining) {
-        newBlock.children.push(child);
-        length += child.text.length;
-      } else {
-        newBlock.children.push({
-          ...child,
-          text: child.text.slice(0, remaining).trimEnd() + '...',
-        });
-        length = maxLength;
-      }
-    }
-
-    // Only keep blocks that actually have text
-    if (
-      newBlock.children.some(
-        (child) => child.type !== 'text' || child.text.trim() !== ''
-      )
-    ) {
-      result.push(newBlock);
-    }
-
-    if (length >= maxLength) break;
-  }
-
-  return result;
 }
 
 export default function BlogCard({ blog }: { blog: Blog }) {
