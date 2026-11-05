@@ -11,26 +11,26 @@ interface StrapiImage {
   alternativeText?: string | null;
 }
 export interface Blog {
-  description: BlocksContent;
-  date: string;
+  description?: BlocksContent;
+  date?: string;
   slug: string;
   title: string;
-  author: string;
-  publishedAt: string;
-  category: string;
+  author?: string;
   image?: StrapiImage | null;
-  content: string;
 }
 
-export default function BlogCard({ blog }: { blog: Blog }) {
+export type BlogPost = Blog;
+
+export default function BlogCard({ blog }: { blog: BlogPost }) {
   return (
     <article className="overflow-hidden rounded-2xl border bg-white shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl">
       {blog?.image?.url && (
         <Image
           src={`${process.env.NEXT_PUBLIC_BACKEND}${blog.image.url}`}
-          alt={blog.image.alternativeText ?? 'Company Logo'}
-          width="100"
-          height="100"
+          alt={blog.image.alternativeText ?? blog.title}
+          width={900}
+          height={600}
+          unoptimized
           className="h-56 w-full object-cover"
           priority
           // unoptimized
@@ -44,15 +44,12 @@ export default function BlogCard({ blog }: { blog: Blog }) {
         </div>
         <div className="mt-4 text-gray-600">
           <BlocksRenderer
-            content={truncateBlocks(
-              blog.description ?? 'description area',
-              150
-            )}
+            content={truncateBlocks(blog.description ?? [], 150)}
           />
         </div>
         <Link
           href={`/blog/${blog.slug}`}
-          className="mt-6 inline-flex rounded-lg bg-indigo-600 px-5 py-2 text-white transition hover:bg-indigo-700"
+          className="mt-6 inline-flex min-h-11 items-center rounded-lg bg-indigo-700 px-5 py-2 text-white transition hover:bg-indigo-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-700"
         >
           Read Article {'>>'}
         </Link>

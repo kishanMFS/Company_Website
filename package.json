@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "eslint .",
     "prepare": "husky"
   },
   "dependencies": {
@@ -18,8 +18,11 @@
     "react-dom": "19.2.4"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "next lint --fix",
-    "**/*.{js,jsx,ts,tsx,html,css,json,md}": [
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{html,css,json,md}": [
       "prettier --write"
     ]
   },

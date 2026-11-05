@@ -4,7 +4,6 @@ export interface Blogs {
 }
 
 export default function BlogHeader({ blogs }: { blogs: Blogs }) {
-  console.log(blogs);
   return (
     <section className="bg-linear-to-r from-indigo-600 to-blue-600 py-24 text-white">
       <div className="mx-auto max-w-6xl px-6 text-center">

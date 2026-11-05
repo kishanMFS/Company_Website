@@ -1,12 +1,12 @@
-import { BlocksContent } from "@strapi/blocks-react-renderer";
+import { BlocksContent } from '@strapi/blocks-react-renderer';
 
 export function flattenAttributes(data: any): any {
   // Check if data is a plain object; return as is if not
   if (
-    typeof data !== "object" ||
+    typeof data !== 'object' ||
     data === null ||
     data instanceof Date ||
-    typeof data === "function"
+    typeof data === 'function'
   ) {
     return data;
   }
@@ -26,8 +26,8 @@ export function flattenAttributes(data: any): any {
 
     // If the key is 'attributes' or 'data', and its value is an object, merge their contents
     if (
-      (key === "attributes" || key === "data") &&
-      typeof data[key] === "object" &&
+      (key === 'attributes' || key === 'data') &&
+      typeof data[key] === 'object' &&
       !Array.isArray(data[key])
     ) {
       Object.assign(flattened, flattenAttributes(data[key]));
@@ -44,58 +44,38 @@ export function truncateBlocks(
   content: BlocksContent,
   maxLength = 150
 ): BlocksContent {
-  let length = 0;
-  const result: BlocksContent = [];
-
-  for (const block of content) {
-    // Ignore empty paragraphs
-    if (
-      block.type === 'paragraph' &&
-      block.children.every(
-        (child) => child.type === 'text' && child.text.trim() === ''
-      )
-    ) {
-      continue;
+  function getText(node: unknown): string {
+    if (Array.isArray(node)) {
+      return node.map(getText).join('');
     }
 
-    const newBlock = {
-      ...block,
-      children: [],
-    } as typeof block;
-
-    for (const child of block.children) {
-      if (child.type !== 'text') {
-        newBlock.children.push(child);
-        continue;
-      }
-
-      if (length >= maxLength) break;
-
-      const remaining = maxLength - length;
-
-      if (child.text.length <= remaining) {
-        newBlock.children.push(child);
-        length += child.text.length;
-      } else {
-        newBlock.children.push({
-          ...child,
-          text: child.text.slice(0, remaining).trimEnd() + '...',
-        });
-        length = maxLength;
-      }
+    if (typeof node !== 'object' || node === null) {
+      return '';
     }
 
-    // Only keep blocks that actually have text
-    if (
-      newBlock.children.some(
-        (child) => child.type !== 'text' || child.text.trim() !== ''
-      )
-    ) {
-      result.push(newBlock);
+    if ('text' in node && typeof node.text === 'string') {
+      return node.text;
     }
 
-    if (length >= maxLength) break;
+    if ('children' in node && Array.isArray(node.children)) {
+      return node.children.map(getText).join('');
+    }
+
+    return '';
   }
 
-  return result;
+  const text = getText(content).replace(/\s+/g, ' ').trim();
+  if (!text) {
+    return [];
+  }
+
+  const truncated =
+    text.length > maxLength ? `${text.slice(0, maxLength).trimEnd()}...` : text;
+
+  return [
+    {
+      type: 'paragraph',
+      children: [{ type: 'text', text: truncated }],
+    },
+  ];
 }
