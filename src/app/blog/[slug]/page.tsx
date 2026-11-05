@@ -6,6 +6,7 @@ import qs from 'qs';
 import * as React from 'react';
 import { useParams } from 'next/navigation';
 import { BlocksRenderer } from '@strapi/blocks-react-renderer';
+import type { BlocksContent } from '@strapi/blocks-react-renderer';
 import Image from 'next/image';
 
 interface Props {
@@ -13,15 +14,17 @@ interface Props {
 }
 
 export interface Blog {
-  image: any;
+  image?: {
+    url?: string;
+    alternativeText?: string | null;
+  } | null;
   date: string;
-  description: string;
+  description: BlocksContent;
   slug: string;
   title: string;
   author: string;
   publishedAt: string;
   category: string;
-  content: string;
 }
 
 export default function BlogDetails() {
@@ -44,14 +47,14 @@ export default function BlogDetails() {
     data: blogPostResponse,
     isLoading: loadingBlogPost,
     error: blogPostError,
-  } = useApiClient<Blog>('/api/blog-posts', blogPostQuery);
+  } = useApiClient<Blog[]>('/api/blog-posts', blogPostQuery);
 
   const blog = blogPostResponse?.data?.find((blog) => blog.slug === slug);
 
   return (
     <main className="bg-gray-50">
       {loadingBlogPost ? (
-        <>Loading Blog '{slug}' ...</>
+        <>Loading Blog &apos;{slug}&apos; ...</>
       ) : blogPostError ? (
         <p className="text-red-500">{blogPostError.message}</p>
       ) : blog ? (
@@ -83,9 +86,7 @@ export default function BlogDetails() {
           </div>
           <section className="mx-auto max-w-4xl px-6 py-20">
             <article className="prose prose-lg max-w-none whitespace-pre-line rounded-2xl bg-white p-10 shadow">
-              <BlocksRenderer
-                content={blog.description ?? 'description area'}
-              />
+              <BlocksRenderer content={blog.description ?? []} />
             </article>
             <div className="mt-12">
               <Link

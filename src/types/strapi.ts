@@ -68,8 +68,8 @@ export interface StrapiMeta {
 }
 
 export interface StrapiResponse<T> {
-  data: T[];
-  meta: StrapiMeta;
+  data: T;
+  meta?: StrapiMeta;
 }
 
 // Company Settings Type (for your API data)
@@ -83,9 +83,31 @@ export interface CompanyHomepage {
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
-  blocks: [];
+  blocks: HomepageBlock[];
 }
 
+export interface HomepageBlock {
+  title?: string;
+  subtitle?: string;
+  services?: {
+    title?: string;
+    description?: string;
+    services?: {
+      id: number;
+      title?: string;
+      description?: import('@strapi/blocks-react-renderer').BlocksContent;
+    }[];
+  }[];
+  blogpost?: {
+    title?: string;
+    description?: string;
+    blog_posts?: {
+      id: number;
+      title?: string;
+      description: import('@strapi/blocks-react-renderer').BlocksContent;
+    }[];
+  }[];
+}
 
 export type HomeBanner = {
   title?: string;
@@ -107,5 +129,17 @@ export type BlogPost = {
 };
 
 export interface Global {
-
+  createdAt?: string;
+  header?: {
+    companyname?: { title?: string; url?: string };
+    navigations?: { title: string; url: string }[];
+  };
+  footer?: {
+    title?: string;
+    description?: string;
+    pagetitle?: string;
+    resourcestitle?: string;
+    pages?: { id: number; title: string; url: string }[];
+    resources?: { id: number; title: string; url: string }[];
+  };
 }
